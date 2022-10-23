@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+
+\newtheorem{case}{Case}
+
+\title{BxOI Solutions}
+\author{Daniel Murphy}
+\date{October 2022}
+
+\begin{document}
+
+
+\section{Tesla}
+\paragraph{Problem:} You are given a list of $n$ charging stations, and at each station $i$ you can charge your car to travel a distance $a_i$. The stations are arranged in a circle and you can travel from station $i$ to $i+1$  (where $n+1 = 1)$  at a distance of $10$. Furthermore $\displaystyle \sum_{i=1}^{n} a_i = 10n$. Find a station from which you can complete a loop without running out of charge.
+
+\paragraph{Solution:} Start at point 1 and simulate the process of going around the circuit, keeping track of the remaining charge $c$ and the starting station $s$. At each station set $c := c +  a_i - 10$. If $c$ becomes negative at station $i$, restart the simulation starting at the next station $s := i+1$. As soon as you have completed a loop, the result is $s$.
+
+This will take at at most 2 trips around the circle, thus having a complexity of $O(2n)$.
+
+\begin{proof} 
+To prove the correctness of our solution, we will prove that from any starting point $s$, you will either complete a full loop without reaching a negative charge, or you will restart at a valid starting point for a loop. \\
+
+
+Let a solution be $r$ (the proof that a solution always exists is left to the reader). Starting from any station $s$, going around the loop (possibly reassigning $s$), you will reach station $r$. 
+
+\begin{case} The remaining charge at $r$ starting from $s$ is negative.
+
+You restart the simulation from $r$, which will result in a complete loop, yielding the correct answer.
+\end{case}
+
+
+\begin{case} The remaining charge at $r$ starting from $s$ is zero.  
+
+In this case either $r = s$ or both $r$ and $s$ are valid solutions. 
+Note that the path from $s$ to $r$ is possible without reaching a negative charge. The loop from $r$ to $r$ is possible, so the path from $r$ to $s$ is possible. If $s$ to $r$ and $r$ to $s$ are possible, then the loop from $s$ to $s$ is possible.
+\end{case}
+
+\begin{case} The remaining charge at $r$ starting from $s$ is positive.
+
+The loop from $r$ to $r$ will result in a charge of 0, as the charge after a full loop is
+$$\displaystyle c = \sum_{i=1}^{n} (a_i - 10) = \sum_{i=1}^{n} a_i - 10n = 10n - 10n = 0$$
+
+So if the path from $s$ to $r$ results in a positive charge, then the path from $r$ to $s$ will be negative. But this is a contradiction, so this case will never occur.
+\end{case} 
+
+\end{proof} 
+
+
+
+\end{document}
